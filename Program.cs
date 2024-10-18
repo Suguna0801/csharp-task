@@ -1,82 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-
-class VotingSystem
+namespace guessnumber
 {
-    // Dictionary to hold candidate names and their vote count
-    static Dictionary<string, int> candidates = new Dictionary<string, int>()
+    class GuessTheNumber
     {
-        {"ALICE", 0},
-        {"BOB", 0},
-        {"CHARLIE", 0}
-    };
-
-    static void Main()
-    {
-        bool running = true;
-
-        Console.WriteLine("Simple Voting System\n");
-
-        while (running)
+        static void Main()
         {
-            Console.WriteLine("\nChoose an option:");
-            Console.WriteLine("1. Vote for a candidate");
-            Console.WriteLine("2. View results");
-            Console.WriteLine("3. Exit");
+            Random random = new Random();
+            int numberToGuess = random.Next(1, 20); // Random number between 1 and 20
+            int numberOfTries = 0;
+            bool hasGuessedCorrectly = false;
 
-            Console.Write("Enter your choice (1-3): ");
-            string input = Console.ReadLine();
+            Console.WriteLine("Welcome to the Guess the Number Game!");
+            Console.WriteLine("I have selected a number between 1 and 20. Can you guess it?");
 
-            switch (input)
+            while (!hasGuessedCorrectly)
             {
-                case "1":
-                    CastVote();
-                    break;
-                case "2":
-                    ViewResults();
-                    break;
-                case "3":
-                    running = false;
-                    Console.WriteLine("Exiting the system.");
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice. Please choose a valid option.");
-                    break;
+                Console.Write("Enter your guess: ");
+                string userInput = Console.ReadLine();
+
+                // Try to parse the input as an integer
+                if (int.TryParse(userInput, out int userGuess))
+                {
+                    numberOfTries++;
+
+                    if (userGuess < 1 || userGuess > 20)
+                    {
+                        Console.WriteLine("Please guess a number between 1 and 20.");
+                    }
+                    else if (userGuess < numberToGuess)
+                    {
+                        Console.WriteLine("Too low! Try again.");
+                    }
+                    else if (userGuess > numberToGuess)
+                    {
+                        Console.WriteLine("Too high! Try again.");
+                    }
+                    else
+                    {
+                        hasGuessedCorrectly = true;
+                        Console.WriteLine($"Congratulations! You've guessed the number {numberToGuess} in {numberOfTries} tries.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
             }
         }
     }
 
-    // Function to cast a vote for a candidate
-    static void CastVote()
-    {
-        Console.WriteLine("\nCandidates:");
-        foreach (var candidate in candidates)
-        {
-            Console.WriteLine(candidate.Key);
-        }
-
-        Console.Write("Enter the name of the candidate you want to vote for: ");
-        string vote = Console.ReadLine().ToUpper(); // Convert user input to uppercase
-
-        // Check if the candidate exists in the dictionary (case insensitive)
-        if (candidates.ContainsKey(vote))
-        {
-            candidates[vote]++;
-            Console.WriteLine($"Vote casted for {vote}.");
-        }
-        else
-        {
-            Console.WriteLine("Invalid candidate name. Try again.");
-        }
-    }
-
-    // Function to display voting results
-    static void ViewResults()
-    {
-        Console.WriteLine("\nVoting Results:");
-        foreach (var candidate in candidates)
-        {
-            Console.WriteLine($"{candidate.Key}: {candidate.Value} vote(s)");
-        }
-    }
 }
+
